@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  Dimensions,
 } from "react-native";
 import { motion } from "motion/react";
 
@@ -125,7 +126,15 @@ export default function CardList({ hp = "" }: CardListProps) {
   ) => (
     <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
       <TouchableOpacity
-        style={[styles.sortButton, { backgroundColor: color }]}
+        style={[
+          styles.sortButton,
+          { backgroundColor: color },
+          // Highlight the active sort button
+          key === sortKey && {
+            borderColor: "#FFFFFF",
+            borderWidth: 2,
+          },
+        ]}
         onPress={() => {
           sortCards(key);
         }}
@@ -219,6 +228,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 16,
+    height: Dimensions.get("window").height - 150,
   },
   messageText: {
     textAlign: "center",
