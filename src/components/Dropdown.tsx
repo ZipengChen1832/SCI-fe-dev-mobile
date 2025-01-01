@@ -52,7 +52,12 @@ export default function Dropdown({ onSelect }: DropdownProps) {
           onSelect(itemValue);
         }}
         style={styles.picker}
-        itemStyle={{ backgroundColor: "grey", color: "blue", fontFamily:"Ebrima", fontSize:17 }}
+        itemStyle={{
+          backgroundColor: "grey",
+          color: "blue",
+          fontFamily: "Ebrima",
+          fontSize: 17,
+        }}
       >
         <Picker.Item label="Select HP" value="" />
         {options.map((option) => (
@@ -67,9 +72,10 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 10,
     borderWidth: 1,
-    borderColor: "#4B5563",
-    borderRadius: 8,
-    backgroundColor: "#374151",
+    padding: 20,
+    // borderColor: "#4B5563",
+    // borderRadius: 8,
+    // backgroundColor: "#374151",
   },
   picker: {
     color: "#FFFFFF",
