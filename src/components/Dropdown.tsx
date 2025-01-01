@@ -23,6 +23,7 @@ export default function Dropdown({ onSelect }: DropdownProps) {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "Failed to load options";
+
         setError(errorMessage);
       } finally {
         setLoading(false);
@@ -37,6 +38,7 @@ export default function Dropdown({ onSelect }: DropdownProps) {
   }
 
   if (error) {
+    // return <Text>oiqwjdoqwj</Text>
     return <Text style={styles.errorText}>Error: {error}</Text>;
   }
 
@@ -50,6 +52,7 @@ export default function Dropdown({ onSelect }: DropdownProps) {
           onSelect(itemValue);
         }}
         style={styles.picker}
+        itemStyle={{ backgroundColor: "grey", color: "blue", fontFamily:"Ebrima", fontSize:17 }}
       >
         <Picker.Item label="Select HP" value="" />
         {options.map((option) => (

@@ -1,5 +1,5 @@
 // CardList.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { motion } from "motion/react";
 
 import Card from "./Card";
 import { searchCards, CardResponse } from "../api/api";
+import Loader from "./temp/Loader";
 
 type CardData = {
   set: string;
@@ -81,12 +83,13 @@ export default function CardList({ hp = "" }: CardListProps) {
       try {
         const result = await searchCards(hp);
         const formattedCards = result.data.map(transformCardResponse);
+        setCards(formattedCards);
 
-        setCards(
-          formattedCards.sort((a, b) =>
-            a[sortKey] < b[sortKey] ? -1 : a[sortKey] > b[sortKey] ? 1 : 0,
-          ),
-        );
+        // setCards(
+        //   formattedCards.sort((a, b) =>
+        //     a[sortKey] < b[sortKey] ? -1 : a[sortKey] > b[sortKey] ? 1 : 0
+        //   )
+        // );
       } catch (err) {
         //setError("Failed to load cards");
         setError(err instanceof Error ? err.message : "Failed to load cards");
@@ -96,38 +99,49 @@ export default function CardList({ hp = "" }: CardListProps) {
     };
 
     void fetchCardData();
-  }, [hp, sortKey]);
+  }, [hp]);
 
   const sortCards = (key: keyof CardData) => {
     setSortKey(key);
-    setCards(
-      [...cards].sort((a, b) =>
-        a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0,
-      ),
-    );
+    // setCards(
+    //   [...cards].sort((a, b) =>
+    //     a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0
+    //   )
+    // );
   };
+
+  const sortedCards = useMemo(
+    () =>
+      [...cards].sort((a, b) =>
+        a[sortKey] < b[sortKey] ? -1 : a[sortKey] > b[sortKey] ? 1 : 0
+      ),
+    [cards, sortKey]
+  );
 
   const renderSortButton = (
     label: string,
     key: keyof CardData,
-    color: string,
+    color: string
   ) => (
-    <TouchableOpacity
-      style={[styles.sortButton, { backgroundColor: color }]}
-      onPress={() => {
-        sortCards(key);
-      }}
-      accessible
-      testID={`sort-by-${key}`}
-    >
-      <Text style={styles.sortButtonText}>Sort by {label}</Text>
-    </TouchableOpacity>
+    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+      <TouchableOpacity
+        style={[styles.sortButton, { backgroundColor: color }]}
+        onPress={() => {
+          sortCards(key);
+        }}
+        accessible
+        testID={`sort-by-${key}`}
+      >
+        <Text style={styles.sortButtonText}>Sort by {label}</Text>
+      </TouchableOpacity>
+    </motion.div>
   );
 
   if (loading) {
     return (
       <View style={styles.container}>
-        <Text style={styles.messageText}>Loading cards...</Text>
+        <Loader label="Loading cards..." />
+        {/* <Text style={styles.messageText}>Loading cards...</Text> */}
       </View>
     );
   }
@@ -156,13 +170,25 @@ export default function CardList({ hp = "" }: CardListProps) {
         {renderSortButton("Cost", "cost", "#8B5CF6")}
         {renderSortButton("Power", "power", "#EF4444")}
       </View>
-      <FlatList
-        data={cards}
-        renderItem={({ item }) => <Card {...item} />}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContent}
-        testID="card-list"
-      />
+      <motion.div
+        key={sortKey}
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0, x: 0, y: 10 },
+          visible: { opacity: 1, x: 0, y: 0 },
+        }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        exit="hidden"
+      >
+        <FlatList
+          data={sortedCards}
+          renderItem={({ item }) => <Card {...item} />}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContent}
+          testID="card-list"
+        />
+      </motion.div>
     </View>
   );
 }

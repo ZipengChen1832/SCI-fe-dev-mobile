@@ -16,7 +16,7 @@ describe("CardList Component", () => {
         {
           Set: "Set1",
           Number: "001",
-          Name: "Card 2",
+          Name: "Card 1",
           Type: "Unit",
           Cost: "1",
           HP: "3",
@@ -36,7 +36,7 @@ describe("CardList Component", () => {
   });
 
   it("renders cards and allows sorting", async () => {
-    render(<CardList hp="HP1" />);
+    render(<CardList hp="1" />);
 
     // Wait for loading state
     expect(screen.getByText(/Loading cards.../i)).toBeTruthy();
@@ -51,7 +51,7 @@ describe("CardList Component", () => {
   it("displays loading and error states", async () => {
     jest
       .spyOn(api, "searchCards")
-      .mockRejectedValue(new Error("Error: An error occurred"));
+      .mockRejectedValue(new Error("Network error"));
     render(<CardList hp="HP1" />);
 
     expect(screen.getByText(/Loading cards.../i)).toBeTruthy();

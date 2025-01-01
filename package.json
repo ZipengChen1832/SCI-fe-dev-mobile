@@ -4,7 +4,6 @@
   "main": "index.ts",
   "scripts": {
     "start": "echo \"Please use 'yarn web-with-proxy' or 'yarn android-with-proxy' or 'yarn ios-with-proxy'\" && exit 1",
-
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -28,6 +27,7 @@
     "expo-blur": "~14.0.1",
     "expo-status-bar": "~2.0.0",
     "expo-symbols": "~0.2.0",
+    "motion": "^11.15.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.5",
